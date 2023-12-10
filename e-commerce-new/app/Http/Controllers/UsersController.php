@@ -14,7 +14,7 @@ class UsersController extends Controller
         $users->email = $req->email;
         $users->username = $req->username;
         $users->password = $req->password;
-        
+        $users->user_type_id=$req->user_type_id;
         $users->save();
     }
 }

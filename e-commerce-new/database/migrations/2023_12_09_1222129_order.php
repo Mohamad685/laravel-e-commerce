@@ -12,6 +12,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')-> on ('users');
+            $table->unsignedBigInteger('order_item_id');
+            $table->foreign('order_item_id')->references('id')-> on ('orderItems');
             $table->timestamp('order_date')->useCurrent();
             $table->string('status');
             $table->timestamps();
