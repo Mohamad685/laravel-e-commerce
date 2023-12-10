@@ -12,7 +12,7 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     public function login(Request $request)
@@ -21,38 +21,33 @@ class AuthController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-    
-        // Attempt to log in the user
-        if (Auth::attempt($request->only('email', 'password'))) {
-            // If login is successful, generate a token and respond
-            $token = Auth::user()->createToken('authToken')->accessToken;
-    
-            return response()->json([
-                'status' => 'success',
-                'user' => Auth::user(),
-                'authorisation' => [
-                    'token' => $token,
-                    'type' => 'bearer',
-                ],
-            ]);
-        }
-    
-        // If login fails, respond with an error
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Unauthorized',
-        ], 401);
-    }
+        $credentials = $request->only('email', 'password');
 
+        $token = Auth::attempt($credentials);
+        if (!$token) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized',
+            ], 401);
+        }
+
+        $user = Auth::user();
+        return response()->json([
+            'status' => 'success',
+            'user' => $user,
+            'authorisation' => [
+                'token' => $token,
+                'type' => 'bearer',
+            ]
+        ]);
+
+    }
     public function register(Request $request)
     {
         $request->validate([
-            'full_name' => 'required|string',
-            'phone_number' => 'required|numeric',
-            'email' => 'required|string|email|unique:users',
-            'username' => 'required|string|unique:users',
+            // 'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'user_type_id' => 'required|exists:user_types,id',
         ]);
 
         $user = User::create([
@@ -65,35 +60,16 @@ class AuthController extends Controller
         ]);
 
         $token = Auth::login($user);
-
-        return $this->respondWithToken($token);
-    }
-
-    public function logout()
-    {
-        Auth::logout();
-
         return response()->json([
             'status' => 'success',
-            'message' => 'Successfully logged out',
-        ]);
-    }
-
-    public function refresh()
-    {
-        return $this->respondWithToken(Auth::refresh());
-    }
-
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'status' => 'success',
-            'user' => Auth::user(),
+            'message' => 'User created successfully',
+            'user' => $user,
             'authorisation' => [
                 'token' => $token,
                 'type' => 'bearer',
             ]
         ]);
     }
-
 }
+
+
