@@ -8,7 +8,7 @@ class OrderItemsController extends Controller
 {
     public function add_quantity(Request $req)
     {
-        $users = new Users;
+        $users = new OrderItem;
         $users->quantity = $req->quantity;
         $users->save();
     }
