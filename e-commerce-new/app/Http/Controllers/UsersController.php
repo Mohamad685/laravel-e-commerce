@@ -16,6 +16,5 @@ class UsersController extends Controller
         $users->password = $req->password;
         $users->is_seller=$req -> is_seller;
         $users->save();
-
     }
 }

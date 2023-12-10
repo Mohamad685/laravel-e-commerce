@@ -18,4 +18,20 @@ class ProductsController extends Controller
         $products->save();
 
     }
+//     public function update_product(Request $req)
+// {
+//     $id_product = $req->id_product;
+//     $product = Product::find($id_product);
+
+//     if ($product && $product->seller_id == 1) {
+//         $product->update([
+//             "name" => $req->name
+//         ]);
+//     }
+
+//     return response()->json([
+//         "product1" => $product
+//     ]);
+// }
+
 }
