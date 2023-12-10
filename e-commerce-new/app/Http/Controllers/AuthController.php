@@ -21,17 +21,27 @@ class AuthController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-
-        $credentials = $request->only('email', 'password');
-
-        if (!$token = Auth::attempt($credentials)) {
+    
+        // Attempt to log in the user
+        if (Auth::attempt($request->only('email', 'password'))) {
+            // If login is successful, generate a token and respond
+            $token = Auth::user()->createToken('authToken')->accessToken;
+    
             return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized',
-            ], 401);
+                'status' => 'success',
+                'user' => Auth::user(),
+                'authorisation' => [
+                    'token' => $token,
+                    'type' => 'bearer',
+                ],
+            ]);
         }
-
-        return $this->respondWithToken($token);
+    
+        // If login fails, respond with an error
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Unauthorized',
+        ], 401);
     }
 
     public function register(Request $request)
