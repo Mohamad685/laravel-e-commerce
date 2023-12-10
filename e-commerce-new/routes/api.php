@@ -6,7 +6,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\OrderItemsController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\OrdersController;
-
+use App\Http\Controllers\AuthController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,3 +29,5 @@ Route::post('/create_user', [UsersController::class, 'create_user']);
 Route::post('/create_order', [OrdersController::class, 'create_order']);
 Route::post('/add_quantity', [OrderItemsController::class, 'add_quantity']);
 Route::post('/get_transactions', [TransactionsController::class, 'get_transactions']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
